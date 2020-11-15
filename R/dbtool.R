@@ -351,6 +351,8 @@ OutputVarproseq2 <- function(vartable, proteinseq, outfa, outmtab, ids, lablersi
     #save(pep_all,file="pep_all.Rdata") 
     ftab <- merge(pep_all, ids, by.x='pro_name', by.y='pro_name', all=FALSE, 
                   stringsAsFactors = FALSE)
+	ftab<-unique(ftab) #remove the redundant seq
+	#save(ftab,file="ftab.Rdata")
     outformat <- apply(ftab, 1, function(x) 
         paste('>',x['Index'],"|", x['pro_name'], "|", x['var_name'], " ", 
               x['tx_name.x'], "|", x['gene_name'], "|", x['description'], 
@@ -452,7 +454,8 @@ PrepareAnnotationEnsembl2 <- function(mart, annotation_path,
     tr_coding <- subset(ids, pro_name != "")  
     tr_noncoding <- subset(ids, pro_name == "")
     
-    txdb<- customProDB:::makeTranscriptDbFromBiomart_archive(biomart=biomart, 
+    #txdb<- customProDB:::makeTranscriptDbFromBiomart_archive(biomart=biomart, 
+    txdb<- makeTranscriptDbFromBiomart_archive2(biomart=biomart, 
                                                 dataset=dataset, 
                                                 host=host, 
                                                 path="/biomart/martservice", 
